@@ -1,6 +1,6 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { httpClient } from "@wix/essentials";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { httpClient } from '@wix/essentials';
 import {
   CollectionOptimisticActions,
   CollectionToolbarFilters,
@@ -17,11 +17,11 @@ import {
   TableState,
   useOptimisticActions,
   useTableCollection,
-} from "@wix/patterns";
-import { CollectionPage } from "@wix/patterns/page";
-import { Add, Edit, InvoiceSmall, Visible } from "@wix/wix-ui-icons-common";
-import { type Jewel } from "../../../../types";
-import { type DataItem } from "../../../../backend/database";
+} from '@wix/patterns';
+import { CollectionPage } from '@wix/patterns/page';
+import { Add, Edit, InvoiceSmall, Visible } from '@wix/wix-ui-icons-common';
+import { type Jewel } from '../../../../types';
+import { type DataItem } from '../../../../backend/database';
 
 export type TableFilters = {
   updatedDate: Filter<RangeItem<Date>>;
@@ -38,13 +38,13 @@ export const useJewelsPageState = () => {
     const data: DataItem[] = await res.json();
     return {
       items: data.map((item) => item.data) || [],
-      cursor: "", //TODO: handle cursor
+      cursor: '', //TODO: handle cursor
     };
   };
 
   const state = useTableCollection<Jewel, TableFilters>({
-    queryName: "dummy-entity-table",
-    fqdn: "wix.patterns.dummyservice.v1.dummy_entity",
+    queryName: 'dummy-entity-table',
+    fqdn: 'wix.patterns.dummyservice.v1.dummy_entity',
     itemKey: (item) => item.id,
     itemName: (item) => item.title,
     fetchData: fetchDataHandler,
@@ -73,9 +73,9 @@ export const useJewelsPageHeader = ({
 
   const createItem = async () => {
     const item = {
-      title: "Random jewel" + Math.random(),
+      title: 'Random jewel' + Math.random(),
       amount: Math.floor(Math.random() * 100),
-      jewel: "necklace",
+      jewel: 'necklace',
       id: Math.random().toString(36).substring(7).toString(),
     };
 
@@ -85,20 +85,20 @@ export const useJewelsPageHeader = ({
         const { data }: { data: Jewel } = await res.json();
         return [data];
       },
-      successToast: "Jewel created successfully",
+      successToast: 'Jewel created successfully',
     });
   };
 
   return (
     <CollectionPage.Header
-      title={{ text: "Dummy Collection", hideTotal: true }}
+      title={{ text: 'Dummy Collection', hideTotal: true }}
       subtitle={{
-        text: "This is a dummy collection subtitle",
-        learnMore: { url: "https://www.wix.com" },
+        text: 'This is a dummy collection subtitle',
+        learnMore: { url: 'https://www.wix.com' },
       }}
       moreActions={<MoreActions items={moreActionsItems} />}
       primaryAction={
-        <PrimaryActions label="Add" prefixIcon={<Add />} onClick={createItem} />
+        <PrimaryActions label='Add' prefixIcon={<Add />} onClick={createItem} />
       }
     />
   );
@@ -116,13 +116,13 @@ export const useJewelsPageContent = ({
       <Table
         useNewInfiniteScrollLoader
         horizontalScroll={true}
-        dataHook="dummy-entity-collection"
+        dataHook='dummy-entity-collection'
         state={state}
         customColumns={<CustomColumns />}
         filters={
           <CollectionToolbarFilters>
             <DateRangeFilter
-              accordionItemProps={{ label: "Date" }}
+              accordionItemProps={{ label: 'Date' }}
               filter={state.collection.filters.updatedDate}
             />
           </CollectionToolbarFilters>
@@ -130,9 +130,9 @@ export const useJewelsPageContent = ({
         actionCell={(_item) => {
           return {
             primaryAction: {
-              text: "Edit",
+              text: 'Edit',
               onClick: () => {
-                console.log("Edit");
+                console.log('Edit');
               },
               icon: <Edit />,
             },
@@ -149,19 +149,19 @@ const useMoreActionsItems = () => {
   return [
     [
       {
-        biName: "action-1",
-        text: "Do Action #1",
+        biName: 'action-1',
+        text: 'Do Action #1',
         prefixIcon: <InvoiceSmall />,
         onClick: () => {
-          navigate("/entity");
+          navigate('/8aq86w');
         },
       },
       {
-        biName: "action-2",
-        text: "Another Action #2",
+        biName: 'action-2',
+        text: 'Another Action #2',
         prefixIcon: <Visible />,
         onClick: () => {
-          console.log("Open Subscriptions");
+          console.log('Open Subscriptions');
         },
       },
     ],
@@ -171,21 +171,21 @@ const useMoreActionsItems = () => {
 const getJewelsTableColumns = () => {
   return [
     {
-      id: "title",
+      id: 'title',
       hideable: false,
-      title: "Title",
+      title: 'Title',
       render: (item: Jewel) => item.title,
     },
     {
-      id: "amount",
+      id: 'amount',
       hideable: false,
-      title: "Amount",
+      title: 'Amount',
       render: (item: Jewel) => item.amount,
     },
     {
-      id: "jewel",
+      id: 'jewel',
       hideable: false,
-      title: "Jewel type",
+      title: 'Jewel type',
       render: (item: Jewel) => item.jewel,
     },
   ] as TableColumn<Jewel>[];
@@ -193,7 +193,7 @@ const getJewelsTableColumns = () => {
 
 const addJewel = async (item: Jewel) =>
   await httpClient.fetchWithAuth(`${import.meta.env.BASE_API_URL}/jewels`, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify({
       jewel: item,
     }),

@@ -1,6 +1,6 @@
 import {
-  DataItem,
   getDataFromCollection,
+  safelyGetItemFromCollection,
   upsertDataToCollection,
 } from '../../database';
 import { JEWELRY_COLLECTION_ID } from '../../consts';
@@ -8,9 +8,15 @@ import { Jewel } from '../../../types';
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  if (url.searchParams.get('id')) {
-    console.log('has id');
+  let entityId = url.searchParams.get('id');
+  if (entityId) {
+    const data = await safelyGetItemFromCollection({
+      itemId: entityId,
+      dataCollectionId: JEWELRY_COLLECTION_ID,
+    });
+    return new Response(JSON.stringify(data));
   }
+
   const jewelsCollection = await getDataFromCollection({
     dataCollectionId: JEWELRY_COLLECTION_ID,
   });

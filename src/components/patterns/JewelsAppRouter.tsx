@@ -18,7 +18,7 @@ const router = createBrowserRouter(
   ],
   {
     basename:
-      '/wix/html/dashboard-asset/7a09bd5e-9992-4ad8-b3d2-e179774468ff.html',
+      '/wix/html/dashboard-asset/7a09bd5e-9992-4ad8-b3d2-e179774468ff.html', //TODO: Change it to the real path provided by the platform
   }
 );
 

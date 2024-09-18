@@ -1,8 +1,5 @@
 import { items } from '@wix/data';
-
 import { Jewel } from '../types';
-
-// Exposing utility functions over Wix Data APIs for easier usage and replacement of database
 
 export type DataItem = {
   _id?: string;
@@ -14,13 +11,10 @@ export const getDataFromCollection = async ({
 }: {
   dataCollectionId: string;
 }) => {
-  const data = await items
-    .queryDataItems({
-      dataCollectionId,
-    })
-    .find();
-
-  return data;
+  const query = items.queryDataItems({
+    dataCollectionId,
+  });
+  return query.find();
 };
 
 export const safelyGetItemFromCollection = async ({
@@ -32,6 +26,7 @@ export const safelyGetItemFromCollection = async ({
 }) => {
   try {
     const { data } = await items.getDataItem(itemId, { dataCollectionId });
+
     return data;
   } catch (error) {
     // Wix data's "getDataItem" API throws exception when item with id does not exist

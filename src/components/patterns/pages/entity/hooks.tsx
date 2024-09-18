@@ -4,15 +4,29 @@ import {
   MoreActions,
   useEntity,
   useEntityPage,
+  useEntityPageContext,
 } from '@wix/patterns';
-import { Breadcrumbs, Card } from '@wix/design-system';
+import {
+  Box,
+  Breadcrumbs,
+  Card,
+  DatePicker,
+  FormField,
+  Input,
+} from '@wix/design-system';
 import { InvoiceSmall } from '@wix/wix-ui-icons-common';
 import { useParams } from 'react-router-dom';
 import { httpClient } from '@wix/essentials';
-import { useForm } from '@wix/patterns/form';
+import {
+  Controller,
+  useController,
+  useForm,
+  useFormContext,
+  useFormState,
+} from '@wix/patterns/form';
 import { Jewel } from '../../../../types';
 
-type EntityPageFormFields = {
+export type EntityPageFormFields = {
   name: string;
   updatedDate: Date;
   createdDate: Date;
@@ -35,15 +49,14 @@ export const useJewelEntityPage = () => {
     fetch: async () => {
       // TODO: Load the entity you want to show in the page
       const res = await httpClient.fetchWithAuth(
-        `${import.meta.env.BASE_API_URL}/jewels?id=${
-          params.entityId ?? 'm9l0wp'
-        }`
+        `${import.meta.env.BASE_API_URL}/jewels?id=${params.entityId}`
       );
       const entity = (await res.json()) as Jewel;
       return { entity };
     },
   });
   const entity = useEntity(state);
+
   return {
     state,
     entity,
@@ -100,25 +113,5 @@ export const useJewelEntityPageHeader = ({
         />
       }
     />
-  );
-};
-export const useJewelEntityPageContent = ({
-  entity,
-}: {
-  entity: Jewel | null;
-}) => {
-  return (
-    <EntityPage.Content>
-      <EntityPage.MainContent>
-        <EntityPage.Card minHeight='204px' dataHook='entity-page-card'>
-          <Card.Header
-            title='Main Data'
-            subtitle='General information about the product'
-          />
-          <Card.Divider />
-          <Card.Content>dataaa</Card.Content>
-        </EntityPage.Card>
-      </EntityPage.MainContent>
-    </EntityPage.Content>
   );
 };
