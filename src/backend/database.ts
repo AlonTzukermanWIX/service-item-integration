@@ -1,5 +1,4 @@
 import { items } from '@wix/data';
-
 import { NewJewel } from '../types';
 
 export type DataItem = {
@@ -71,31 +70,36 @@ export const upsertDataToCollection = async ({
   item: DataItem;
 }) => {
   const collection = await getDataFromCollection({ dataCollectionId });
-  const existsInCollection =
-    item._id &&
-    collection.items.find((existingItem) => existingItem._id === item._id);
-
-  if (item._id && existsInCollection) {
-    await items.updateDataItem(item._id, {
-      dataCollectionId,
-      dataItem: {
-        data: {
-          _id: item._id,
-          ...item.data,
+  const existsInCollection = collection.items.find(
+    (existingItem) => existingItem._id === item._id
+  );
+  console.log('existsInCollection', existsInCollection, item);
+  try {
+    if (item._id && existsInCollection) {
+      await items.updateDataItem(item._id, {
+        dataCollectionId,
+        dataItem: {
+          data: {
+            _id: item._id,
+            ...item.data,
+          },
         },
-      },
-    });
-  } else {
-    await items.insertDataItem({
-      dataCollectionId,
-      dataItem: {
-        _id: item._id ?? undefined,
-        data: {
+      });
+    } else {
+      console.log('inserting');
+      await items.insertDataItem({
+        dataCollectionId,
+        dataItem: {
           _id: item._id ?? undefined,
-          ...item.data,
+          data: {
+            _id: item._id ?? undefined,
+            ...item.data,
+          },
         },
-      },
-    });
+      });
+    }
+  } catch (error) {
+    console.error(error);
   }
 };
 

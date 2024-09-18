@@ -33,8 +33,9 @@ export async function POST(req: Request) {
     await upsertDataToCollection({
       dataCollectionId: NEW_COLLECTION_ID,
       item: {
-        _id: jewel.id,
-        data: jewel,
+        _id: jewel._id,
+        id: jewel._id,
+        data: { ...jewel, _id: jewel._id },
       },
     });
 

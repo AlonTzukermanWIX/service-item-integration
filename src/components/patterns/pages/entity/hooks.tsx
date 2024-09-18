@@ -18,6 +18,7 @@ export type EntityPageFormFields = {
   color: string;
   certification: string;
   category: string;
+  availability: boolean;
 };
 
 export const useJewelEntityPage = () => {
@@ -31,16 +32,20 @@ export const useJewelEntityPage = () => {
     form,
     onSave: async (data) => {
       // // TODO: save the entity
+      const id = params.entityId ?? 'some random id' + Math.random();
       const formValues = form.getValues();
+      const newItem = { ...formValues, _id: id, id };
       await httpClient.fetchWithAuth(
         `${import.meta.env.BASE_API_URL}/jewels?id=${params.entityId}`,
         {
           method: 'POST',
-          body: JSON.stringify({ jewel: formValues }),
+          body: JSON.stringify({
+            jewel: newItem,
+          }),
         }
       );
-
-      return navigate('/');
+      navigate('/');
+      return new Promise((resolve) => resolve({ updatedEntity: newItem }));
     },
     saveSuccessToast: 'Successfully saved',
     saveErrorToast: (e) => 'Failed to save',
