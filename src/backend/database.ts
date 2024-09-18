@@ -1,10 +1,10 @@
 import { items } from '@wix/data';
 
-import { Jewel } from '../types';
+import { NewJewel } from '../types';
 
 export type DataItem = {
   _id?: string;
-  data: Jewel;
+  data: NewJewel;
 };
 
 export const getDataFromCollection = async ({
