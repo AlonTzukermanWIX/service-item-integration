@@ -1,5 +1,4 @@
 import {
-  DataItem,
   deleteDataFromCollection,
   getDataFromCollection,
   safelyGetItemFromCollection,

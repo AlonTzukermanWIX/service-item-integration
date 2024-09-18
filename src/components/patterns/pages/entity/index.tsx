@@ -1,7 +1,12 @@
 import React from 'react';
 import { EntityPage } from '@wix/patterns';
 import { useJewelEntityPage, useJewelEntityPageHeader } from './hooks';
-import { Form } from './EntityPageForm';
+import {
+  Availability,
+  Cerification,
+  MainForm,
+  JewelCategory,
+} from './EntityPageForm';
 import { Card } from '@wix/design-system';
 
 export const JewelEntityPage = () => {
@@ -13,22 +18,20 @@ export const JewelEntityPage = () => {
       {header}
       <EntityPage.Content>
         <EntityPage.MainContent>
-          <Form />
+          <MainForm />
         </EntityPage.MainContent>
         <EntityPage.AdditionalContent>
-          <Card></Card>
+          <Card>
+            <Availability />
+          </Card>
+          <Card>
+            <Cerification />
+          </Card>
+          <Card>
+            <JewelCategory />
+          </Card>
         </EntityPage.AdditionalContent>
       </EntityPage.Content>
     </EntityPage>
-  );
-};
-
-const Cerification = () => {
-  return (
-    <>
-      <Card.Header title='Certification' />
-      <Card.Divider />
-      <Card.Content></Card.Content>
-    </>
   );
 };
