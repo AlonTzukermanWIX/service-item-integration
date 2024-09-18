@@ -3,7 +3,7 @@ import { EntityPage, useEntity, useEntityPage } from '@wix/patterns';
 import { Breadcrumbs } from '@wix/design-system';
 
 import { useForm } from '@wix/patterns/form';
-import { Jewel } from '../../../../types';
+import { NewJewel } from '../../../../types';
 import { useParams } from 'react-router-dom';
 import { httpClient } from '@wix/essentials';
 
@@ -11,8 +11,13 @@ import { useNavigate } from 'react-router-dom';
 
 export type EntityPageFormFields = {
   name: string;
-  updatedDate: Date;
-  createdDate: Date;
+  sku: string;
+  mainImage: string;
+  price: number;
+  details: string;
+  color: string;
+  certification: string;
+  category: string;
 };
 
 export const useJewelEntityPage = () => {
@@ -20,16 +25,17 @@ export const useJewelEntityPage = () => {
   const form = useForm<EntityPageFormFields>();
   const navigate = useNavigate();
 
-  const state = useEntityPage<Jewel, EntityPageFormFields>({
+  const state = useEntityPage<NewJewel, EntityPageFormFields>({
     parentPath: '/',
     parentPageId: '',
     form,
     onSave: async (data) => {
-      const formValues = form.getValues();
-      // TODO: save the entity
-      navigate('/');
+      console.log({ data });
+      // const formValues = form.getValues();
+      // // TODO: save the entity
+      // navigate('/');
       return await new Promise((resolve) =>
-        resolve({ updatedEntity: {} as Jewel })
+        resolve({ updatedEntity: {} as NewJewel })
       );
     },
     saveSuccessToast: 'Successfully saved',
@@ -39,10 +45,11 @@ export const useJewelEntityPage = () => {
       const res = await httpClient.fetchWithAuth(
         `${import.meta.env.BASE_API_URL}/jewels?id=${params.entityId}`
       );
-      const entity = (await res.json()) as Jewel;
+      const entity = (await res.json()) as NewJewel;
       return { entity };
     },
   });
+  console.log(state.entity);
   const entity = useEntity(state);
 
   return {
@@ -54,12 +61,12 @@ export const useJewelEntityPage = () => {
 export const useJewelEntityPageHeader = ({
   entity,
 }: {
-  entity: Jewel | null;
+  entity: NewJewel | null;
 }) => {
   const navigate = useNavigate();
   return (
     <EntityPage.Header
-      title={{ text: entity?.title || 'New Entity' }}
+      title={{ text: entity?.name || 'New Entity' }}
       subtitle={
         entity
           ? {

@@ -11,7 +11,7 @@ import {
   RichTextInputArea,
   ToggleSwitch,
 } from '@wix/design-system';
-import { Jewel } from '../../../../types';
+import { NewJewel } from '../../../../types';
 import { Controller, useController } from '@wix/patterns/form';
 import { EntityPageFormFields } from './hooks';
 import { ImagePicker } from '../../../ImagePicker';
@@ -22,12 +22,12 @@ export const MainForm = () => {
   const {
     entity,
     form: { control },
-  } = useEntityPageContext<Jewel, EntityPageFormFields>();
-
+  } = useEntityPageContext<NewJewel, EntityPageFormFields>();
+  console.log({ entity });
   const name = useController({
     name: 'name',
     control,
-    defaultValue: entity?.title,
+    defaultValue: entity?.name,
     rules: { required: { value: true, message: 'The field is required' } },
   });
   const price = useController({
@@ -79,17 +79,8 @@ export const MainForm = () => {
             <Cell span={6}>
               <Controller
                 control={control}
-                name='updatedDate'
-                defaultValue={entity?.updatedDate}
-                rules={{
-                  validate: (value?: Date) => {
-                    return value?.getDay() !== 6
-                      ? true
-                      : `${value.toLocaleString('en', {
-                          weekday: 'long',
-                        })} is a non-working day, please choose a different day.`;
-                  },
-                }}
+                name='sku'
+                defaultValue={entity?.sku}
                 render={({
                   field: { onChange, onBlur, value, ref },
                   fieldState: { invalid, error },
@@ -139,7 +130,6 @@ export const MainForm = () => {
                     console.log(e);
                     mainImage.field.onChange(e);
                   }}
-                  onBlur={mainImage.field.onBlur}
                   src={mainImage.field.value}
                   ref={mainImage.field.ref}
                 />
@@ -155,7 +145,6 @@ export const MainForm = () => {
                 <RichTextInputArea
                   initialValue={details.field.value}
                   onChange={details.field.onChange}
-                  onBlur={details.field.onBlur}
                 />
               </FormField>
             </Cell>
@@ -189,7 +178,7 @@ export const Cerification = () => {
   const {
     entity,
     form: { control },
-  } = useEntityPageContext<Jewel, EntityPageFormFields>();
+  } = useEntityPageContext<NewJewel, EntityPageFormFields>();
   const cert = useController({
     name: 'certification',
     control,
@@ -222,7 +211,7 @@ export const Availability = () => {
   const {
     entity,
     form: { control },
-  } = useEntityPageContext<Jewel, EntityPageFormFields>();
+  } = useEntityPageContext<NewJewel, { availability: boolean }>();
   const availability = useController({
     name: 'availability',
     control,
@@ -257,7 +246,7 @@ export const JewelCategory = () => {
   const {
     entity,
     form: { control },
-  } = useEntityPageContext<Jewel, EntityPageFormFields>();
+  } = useEntityPageContext<NewJewel, EntityPageFormFields>();
   const category = useController({
     name: 'category',
     control,

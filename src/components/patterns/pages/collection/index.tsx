@@ -16,7 +16,6 @@ export const JewelsCollectionPage = () => {
     state,
     optimisticActions,
   });
-  console.log({ state });
   return (
     <CollectionPage dataHook='dummy-collection-page'>
       {collectionPageHeader}

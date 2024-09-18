@@ -13,5 +13,6 @@ export interface NewJewel {
   color: string;
   certification: string;
   category: string;
+  availability: boolean;
   id: string;
 }
