@@ -1,4 +1,8 @@
-import { getDataFromCollection, upsertDataToCollection } from '../../database';
+import {
+  DataItem,
+  getDataFromCollection,
+  upsertDataToCollection,
+} from '../../database';
 import { JEWELRY_COLLECTION_ID } from '../../consts';
 import { Jewel } from '../../../types';
 
