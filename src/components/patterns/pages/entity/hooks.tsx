@@ -30,13 +30,17 @@ export const useJewelEntityPage = () => {
     parentPageId: '',
     form,
     onSave: async (data) => {
-      console.log({ data });
-      // const formValues = form.getValues();
       // // TODO: save the entity
-      // navigate('/');
-      return await new Promise((resolve) =>
-        resolve({ updatedEntity: {} as NewJewel })
+      const formValues = form.getValues();
+      await httpClient.fetchWithAuth(
+        `${import.meta.env.BASE_API_URL}/jewels?id=${params.entityId}`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ jewel: formValues }),
+        }
       );
+
+      return navigate('/');
     },
     saveSuccessToast: 'Successfully saved',
     saveErrorToast: (e) => 'Failed to save',
@@ -49,7 +53,6 @@ export const useJewelEntityPage = () => {
       return { entity };
     },
   });
-  console.log(state.entity);
   const entity = useEntity(state);
 
   return {

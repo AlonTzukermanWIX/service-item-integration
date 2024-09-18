@@ -50,7 +50,6 @@ export const useJewelsPageState = () => {
     sort,
   }: OffsetQuery<Partial<TableFilters>>) => {
     //TODO: handle query and filters
-    console.log(search, filters, sort);
 
     let queryParams = {};
     if (search) {
@@ -76,7 +75,6 @@ export const useJewelsPageState = () => {
     );
 
     const data: DataItem[] = await res.json();
-    console.log({ data });
     return {
       items: data.map((item) => item.data) || [],
       cursor: '', //TODO: handle cursor
@@ -317,7 +315,6 @@ const getJewelsTableColumns = () => {
       hideable: false,
       title: 'Jewel type',
       render: (item: NewJewel) => {
-        console.log({ item });
         return <Image src={item.mainImage} />;
       },
     },

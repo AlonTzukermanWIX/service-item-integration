@@ -6,19 +6,19 @@ import {
   Cerification,
   MainForm,
   JewelCategory,
+  FormWrapper,
 } from './EntityPageForm';
 import { Card } from '@wix/design-system';
 
 export const JewelEntityPage = () => {
   const { state, entity } = useJewelEntityPage();
   const header = useJewelEntityPageHeader({ entity });
-  console.log({ entity }, 'from page');
   return (
     <EntityPage state={state} dataHook='demo-entity-page'>
       {header}
       <EntityPage.Content>
         <EntityPage.MainContent>
-          <MainForm />
+          <FormWrapper />
         </EntityPage.MainContent>
         <EntityPage.AdditionalContent>
           <Card>

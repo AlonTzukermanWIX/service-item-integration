@@ -24,6 +24,14 @@ export const ImagePicker = ({
       ref={ref}
       width={width || '100%'}
       height={height || '100%'}
+      onUpdateImage={async () => {
+        const chosenMediaItems = await dashboard.openMediaManager({
+          multiSelect: true,
+        });
+        if (chosenMediaItems?.items[0].url) {
+          setImage(chosenMediaItems.items[0].url);
+        }
+      }}
       onAddImage={async () => {
         const chosenMediaItems = await dashboard.openMediaManager({
           multiSelect: true,

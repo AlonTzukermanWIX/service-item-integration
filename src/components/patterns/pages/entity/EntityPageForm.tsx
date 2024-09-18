@@ -12,18 +12,19 @@ import {
   ToggleSwitch,
 } from '@wix/design-system';
 import { NewJewel } from '../../../../types';
-import { Controller, useController } from '@wix/patterns/form';
+import { Control, Controller, useController } from '@wix/patterns/form';
 import { EntityPageFormFields } from './hooks';
 import { ImagePicker } from '../../../ImagePicker';
 import { Dropdown } from '@wix/design-system';
 import { Currency } from '@wix/wix-ui-icons-common';
 
-export const MainForm = () => {
-  const {
-    entity,
-    form: { control },
-  } = useEntityPageContext<NewJewel, EntityPageFormFields>();
-  console.log({ entity });
+export const MainForm = ({
+  entity,
+  control,
+}: {
+  entity: NewJewel;
+  control: Control<EntityPageFormFields, any>;
+}) => {
   const name = useController({
     name: 'name',
     control,
@@ -126,8 +127,9 @@ export const MainForm = () => {
                 inputWidth='100%'
               >
                 <ImagePicker
+                  width='100%'
+                  height='400px'
                   setImage={(e) => {
-                    console.log(e);
                     mainImage.field.onChange(e);
                   }}
                   src={mainImage.field.value}
@@ -174,6 +176,14 @@ export const MainForm = () => {
   );
 };
 
+export const FormWrapper = () => {
+  const {
+    entity,
+    form: { control },
+  } = useEntityPageContext<NewJewel, EntityPageFormFields>();
+  if (!entity) return null;
+  return <MainForm entity={entity} control={control} />;
+};
 export const Cerification = () => {
   const {
     entity,
@@ -183,7 +193,6 @@ export const Cerification = () => {
     name: 'certification',
     control,
     defaultValue: entity?.certification,
-    rules: { required: { value: true, message: 'The field is required' } },
   });
   const options = [
     { id: 'GIA', value: 'GIA' },
@@ -200,7 +209,7 @@ export const Cerification = () => {
           statusMessage={cert.fieldState.error?.message}
           inputWidth='100%'
         >
-          <Dropdown selectedId={options[0].id} options={options} />
+          <Dropdown selectedId={cert.field.value} options={options} />
         </FormField>
       </Card.Content>
     </>
@@ -272,7 +281,7 @@ export const JewelCategory = () => {
           statusMessage={category.fieldState.error?.message}
           inputWidth='100%'
         >
-          <Dropdown selectedId={options[0].id} options={options} />
+          <Dropdown selectedId={category.field.value} options={options} />
         </FormField>
       </Card.Content>
     </>

@@ -1,6 +1,6 @@
-import { items } from "@wix/data";
+import { items } from '@wix/data';
 
-import { NewJewel } from "../types";
+import { NewJewel } from '../types';
 
 export type DataItem = {
   _id?: string;
@@ -18,34 +18,33 @@ export const getDataFromCollection = async ({
     dataCollectionId,
   });
 
-  if (query?.get("q")) {
-    queryItems.startsWith("name", query.get("q") as string);
+  if (query?.get('q')) {
+    queryItems.startsWith('name', query.get('q') as string);
   }
 
-  if (query?.get("colors")) {
+  if (query?.get('colors')) {
     queryItems = queryItems.in(
-      "colors",
-      query.get("colors")?.split(",") as string[]
+      'colors',
+      query.get('colors')?.split(',') as string[]
     );
   }
 
-  if (query?.get("collections")) {
+  if (query?.get('collections')) {
     queryItems = queryItems.in(
-      "collections",
-      query.get("collections")?.split(",") as string[]
+      'collections',
+      query.get('collections')?.split(',') as string[]
     );
   }
 
-  if (query?.get("available")) {
-    if (query.get("available") === "available") {
-      queryItems = queryItems.ne("available", 0);
+  if (query?.get('available')) {
+    if (query.get('available') === 'available') {
+      queryItems = queryItems.ne('available', 0);
     } else {
-      queryItems = queryItems.eq("available", 0);
+      queryItems = queryItems.eq('available', 0);
     }
   }
 
   const data = await queryItems.find();
-
   return data;
 };
 
@@ -57,9 +56,8 @@ export const safelyGetItemFromCollection = async ({
   itemId: string;
 }) => {
   try {
-    const { data } = await items.getDataItem(itemId, { dataCollectionId });
-
-    return data;
+    const item = await items.getDataItem(itemId, { dataCollectionId });
+    return item.data;
   } catch (error) {
     // Wix data's "getDataItem" API throws exception when item with id does not exist
   }
