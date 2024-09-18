@@ -1,12 +1,10 @@
 import { items } from "@wix/data";
 
-import { Jewel } from "../types";
-
-// Exposing utility functions over Wix Data APIs for easier usage and replacement of database
+import { NewJewel } from "../types";
 
 export type DataItem = {
   _id?: string;
-  data: Jewel;
+  data: NewJewel;
 };
 
 export const getDataFromCollection = async ({
@@ -60,6 +58,7 @@ export const safelyGetItemFromCollection = async ({
 }) => {
   try {
     const { data } = await items.getDataItem(itemId, { dataCollectionId });
+
     return data;
   } catch (error) {
     // Wix data's "getDataItem" API throws exception when item with id does not exist

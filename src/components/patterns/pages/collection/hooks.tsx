@@ -25,6 +25,8 @@ import {
   useStaticListFilterCollection,
   useTableCollection,
 } from "@wix/patterns";
+import { type NewJewel } from "../../../../types";
+import { type DataItem } from "../../../../backend/database";
 import { CollectionPage } from "@wix/patterns/page";
 import {
   Add,
@@ -33,9 +35,7 @@ import {
   InvoiceSmall,
   Visible,
 } from "@wix/wix-ui-icons-common";
-import { type Jewel } from "../../../../types";
-import { type DataItem } from "../../../../backend/database";
-import { Text } from "@wix/design-system";
+import { Image, Text } from "@wix/design-system";
 
 export type TableFilters = {
   colors: Filter<string[]>;
@@ -74,14 +74,16 @@ export const useJewelsPageState = () => {
         queryParams
       ).toString()}`
     );
+
     const data: DataItem[] = await res.json();
+    console.log({ data });
     return {
       items: data.map((item) => item.data) || [],
       cursor: "", //TODO: handle cursor
     };
   };
 
-  const state = useTableCollection<Jewel, TableFilters>({
+  const state = useTableCollection<NewJewel, TableFilters>({
     queryName: "dummy-entity-table",
     fqdn: "wix.patterns.dummyservice.v1.dummy_entity",
     itemKey: (item) => item.id,
@@ -107,8 +109,8 @@ export const useJewelsPageHeader = ({
   state,
   optimisticActions,
 }: {
-  state: TableState<Jewel, TableFilters>;
-  optimisticActions: CollectionOptimisticActions<Jewel, TableFilters>;
+  state: TableState<NewJewel, TableFilters>;
+  optimisticActions: CollectionOptimisticActions<NewJewel, TableFilters>;
 }) => {
   const moreActionsItems = useMoreActionsItems();
 
@@ -123,7 +125,7 @@ export const useJewelsPageHeader = ({
     optimisticActions.createOne(item, {
       submit: async ([itemToSubmit]) => {
         const res = await addJewel(itemToSubmit);
-        const { data }: { data: Jewel } = await res.json();
+        const { data }: { data: NewJewel } = await res.json();
         return [data];
       },
       successToast: "Jewel created successfully",
@@ -149,8 +151,8 @@ export const useJewelsPageContent = ({
   state,
   optimisticActions,
 }: {
-  state: TableState<Jewel, TableFilters>;
-  optimisticActions: CollectionOptimisticActions<Jewel, TableFilters>;
+  state: TableState<NewJewel, TableFilters>;
+  optimisticActions: CollectionOptimisticActions<NewJewel, TableFilters>;
 }) => {
   const navigate = useNavigate();
 
@@ -281,7 +283,7 @@ const useMoreActionsItems = () => {
         text: "Do Action #1",
         prefixIcon: <InvoiceSmall />,
         onClick: () => {
-          navigate("/entity");
+          navigate("/8aq86w");
         },
       },
       {
@@ -299,27 +301,30 @@ const useMoreActionsItems = () => {
 const getJewelsTableColumns = () => {
   return [
     {
-      id: "title",
+      id: "name",
       hideable: false,
-      title: "Title",
-      render: (item: Jewel) => item.title,
+      title: "Name",
+      render: (item: NewJewel) => item.name,
     },
     {
-      id: "amount",
+      id: "sku",
       hideable: false,
-      title: "Amount",
-      render: (item: Jewel) => item.amount,
+      title: "SKU",
+      render: (item: NewJewel) => item.sku,
     },
     {
       id: "jewel",
       hideable: false,
       title: "Jewel type",
-      render: (item: Jewel) => item.jewel,
+      render: (item: NewJewel) => {
+        console.log({ item });
+        return <Image src={item.mainImage} />;
+      },
     },
-  ] as TableColumn<Jewel>[];
+  ] as TableColumn<NewJewel>[];
 };
 
-const addJewel = async (item: Jewel) =>
+const addJewel = async (item: NewJewel) =>
   await httpClient.fetchWithAuth(`${import.meta.env.BASE_API_URL}/jewels`, {
     method: "POST",
     body: JSON.stringify({
@@ -327,7 +332,7 @@ const addJewel = async (item: Jewel) =>
     }),
   });
 
-const deleteJewels = async (jewels: Jewel[]) =>
+const deleteJewels = async (jewels: NewJewel[]) =>
   await httpClient.fetchWithAuth(`${import.meta.env.BASE_API_URL}/jewels`, {
     method: "DELETE",
     body: JSON.stringify({

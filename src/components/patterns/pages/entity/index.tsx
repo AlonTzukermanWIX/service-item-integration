@@ -1,20 +1,37 @@
 import React from 'react';
-
 import { EntityPage } from '@wix/patterns';
+import { useJewelEntityPage, useJewelEntityPageHeader } from './hooks';
 import {
-  useJewelEntityPage,
-  useJewelEntityPageContent,
-  useJewelEntityPageHeader,
-} from './hooks';
+  Availability,
+  Cerification,
+  MainForm,
+  JewelCategory,
+} from './EntityPageForm';
+import { Card } from '@wix/design-system';
 
 export const JewelEntityPage = () => {
   const { state, entity } = useJewelEntityPage();
-  const jewelEntityPageHeader = useJewelEntityPageHeader({ entity });
-  const jewelEntityPageContent = useJewelEntityPageContent({ entity });
+  const header = useJewelEntityPageHeader({ entity });
+
   return (
     <EntityPage state={state} dataHook='demo-entity-page'>
-      {jewelEntityPageHeader}
-      {jewelEntityPageContent}
+      {header}
+      <EntityPage.Content>
+        <EntityPage.MainContent>
+          <MainForm />
+        </EntityPage.MainContent>
+        <EntityPage.AdditionalContent>
+          <Card>
+            <Availability />
+          </Card>
+          <Card>
+            <Cerification />
+          </Card>
+          <Card>
+            <JewelCategory />
+          </Card>
+        </EntityPage.AdditionalContent>
+      </EntityPage.Content>
     </EntityPage>
   );
 };

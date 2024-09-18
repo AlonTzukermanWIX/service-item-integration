@@ -1,33 +1,38 @@
 import {
-  DataItem,
   deleteDataFromCollection,
   getDataFromCollection,
+  safelyGetItemFromCollection,
   upsertDataToCollection,
 } from "../../database";
-import { JEWELRY_COLLECTION_ID } from "../../consts";
-import { Jewel } from "../../../types";
+import { NEW_COLLECTION_ID } from "../../consts";
+import { NewJewel } from "../../../types";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-
-  if (url.searchParams.get("id")) {
-    console.log("has id");
+  let entityId = url.searchParams.get("id");
+  if (entityId) {
+    const data = await safelyGetItemFromCollection({
+      itemId: entityId,
+      dataCollectionId: NEW_COLLECTION_ID,
+    });
+    return new Response(JSON.stringify(data));
   }
 
   const jewelsCollection = await getDataFromCollection({
-    dataCollectionId: JEWELRY_COLLECTION_ID,
+    dataCollectionId: NEW_COLLECTION_ID,
     query: url.searchParams,
   });
 
+  console.log({ items: jewelsCollection.items });
   return new Response(JSON.stringify(jewelsCollection.items));
 }
 
 export async function POST(req: Request) {
-  const { jewel } = (await req.json()) as { jewel: Jewel };
+  const { jewel } = (await req.json()) as { jewel: NewJewel };
 
   try {
     await upsertDataToCollection({
-      dataCollectionId: JEWELRY_COLLECTION_ID,
+      dataCollectionId: NEW_COLLECTION_ID,
       item: {
         _id: jewel.id,
         data: jewel,
@@ -41,11 +46,11 @@ export async function POST(req: Request) {
 }
 
 export async function DELETE(req: Request) {
-  const { jewels } = (await req.json()) as { jewels: Jewel[] };
+  const { jewels } = (await req.json()) as { jewels: NewJewel[] };
 
   try {
     await deleteDataFromCollection({
-      dataCollectionId: JEWELRY_COLLECTION_ID,
+      dataCollectionId: NEW_COLLECTION_ID,
       itemIds: jewels.map((jewel) => jewel.id),
     });
 

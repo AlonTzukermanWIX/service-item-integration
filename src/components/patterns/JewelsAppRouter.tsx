@@ -1,24 +1,24 @@
-import React from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { WixPatternsProvider } from "@wix/patterns/provider";
-import { JewelsCollectionPage } from "./pages/collection";
-import { JewelEntityPage } from "./pages/entity";
-import "@wix/design-system/styles.global.css";
+import React from 'react';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { WixPatternsProvider } from '@wix/patterns/provider';
+import { JewelsCollectionPage } from './pages/collection';
+import { JewelEntityPage } from './pages/entity';
+import '@wix/design-system/styles.global.css';
 
 const router = createBrowserRouter(
   [
     {
-      path: "/",
+      path: '/',
       element: <JewelsCollectionPage />,
     },
     {
-      path: "/:entityId",
+      path: '/:entityId',
       element: <JewelEntityPage />,
     },
   ],
   {
     basename:
-      "/wix/html/dashboard-asset/7a09bd5e-9992-4ad8-b3d2-e179774468ff.html",
+      '/wix/html/dashboard-asset/7a09bd5e-9992-4ad8-b3d2-e179774468ff.html',
   }
 );
 
