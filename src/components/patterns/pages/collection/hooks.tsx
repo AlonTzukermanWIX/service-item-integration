@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { httpClient } from "@wix/essentials";
 import {
+  CollectionOptimisticActions,
   CollectionToolbarFilters,
   CursorQuery,
   CustomColumns,
@@ -53,42 +54,22 @@ export const useJewelsPageState = () => {
     },
   });
 
+  const optimisticActions = useOptimisticActions(state.collection);
+
   return {
     state,
+    optimisticActions,
   };
 };
 
-export const useJewelsPageHeader = () => {
+export const useJewelsPageHeader = ({
+  state,
+  optimisticActions,
+}: {
+  state: TableState<Jewel, TableFilters>;
+  optimisticActions: CollectionOptimisticActions<Jewel, TableFilters>;
+}) => {
   const moreActionsItems = useMoreActionsItems();
-  return (
-    <CollectionPage.Header
-      title={{ text: "Dummy Collection", hideTotal: true }}
-      subtitle={{
-        text: "This is a dummy collection subtitle",
-        learnMore: { url: "https://www.wix.com" },
-      }}
-      moreActions={<MoreActions items={moreActionsItems} />}
-      primaryAction={
-        <PrimaryActions
-          label="Add"
-          prefixIcon={<Add />}
-          subItems={[
-            {
-              label: "Add random jewel",
-              onClick: addJewel,
-              biName: "add-random-jewel",
-            },
-          ]}
-        />
-      }
-    />
-  );
-};
-
-export const useJewelsPageContent = (
-  state: TableState<Jewel, TableFilters>
-) => {
-  const optimisticActions = useOptimisticActions(state.collection);
 
   const createItem = async () => {
     const item = {
@@ -108,6 +89,28 @@ export const useJewelsPageContent = (
     });
   };
 
+  return (
+    <CollectionPage.Header
+      title={{ text: "Dummy Collection", hideTotal: true }}
+      subtitle={{
+        text: "This is a dummy collection subtitle",
+        learnMore: { url: "https://www.wix.com" },
+      }}
+      moreActions={<MoreActions items={moreActionsItems} />}
+      primaryAction={
+        <PrimaryActions label="Add" prefixIcon={<Add />} onClick={createItem} />
+      }
+    />
+  );
+};
+
+export const useJewelsPageContent = ({
+  state,
+  optimisticActions,
+}: {
+  state: TableState<Jewel, TableFilters>;
+  optimisticActions: CollectionOptimisticActions<Jewel, TableFilters>;
+}) => {
   return (
     <CollectionPage.Content>
       <Table

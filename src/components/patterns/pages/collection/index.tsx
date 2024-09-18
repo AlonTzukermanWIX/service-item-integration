@@ -7,9 +7,15 @@ import {
 } from "./hooks";
 
 export const JewelsCollectionPage = () => {
-  const { state } = useJewelsPageState();
-  const collectionPageHeader = useJewelsPageHeader();
-  const collectionPageContent = useJewelsPageContent(state);
+  const { state, optimisticActions } = useJewelsPageState();
+  const collectionPageHeader = useJewelsPageHeader({
+    state,
+    optimisticActions,
+  });
+  const collectionPageContent = useJewelsPageContent({
+    state,
+    optimisticActions,
+  });
   return (
     <CollectionPage dataHook="dummy-collection-page">
       {collectionPageHeader}
