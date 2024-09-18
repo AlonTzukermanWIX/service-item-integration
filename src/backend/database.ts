@@ -11,14 +11,42 @@ export type DataItem = {
 
 export const getDataFromCollection = async ({
   dataCollectionId,
+  query,
 }: {
   dataCollectionId: string;
+  query?: URLSearchParams;
 }) => {
-  const data = await items
-    .queryDataItems({
-      dataCollectionId,
-    })
-    .find();
+  let queryItems = items.queryDataItems({
+    dataCollectionId,
+  });
+
+  if (query?.get("q")) {
+    queryItems.startsWith("name", query.get("q") as string);
+  }
+
+  if (query?.get("colors")) {
+    queryItems = queryItems.in(
+      "colors",
+      query.get("colors")?.split(",") as string[]
+    );
+  }
+
+  if (query?.get("collections")) {
+    queryItems = queryItems.in(
+      "collections",
+      query.get("collections")?.split(",") as string[]
+    );
+  }
+
+  if (query?.get("available")) {
+    if (query.get("available") === "available") {
+      queryItems = queryItems.ne("available", 0);
+    } else {
+      queryItems = queryItems.eq("available", 0);
+    }
+  }
+
+  const data = await queryItems.find();
 
   return data;
 };

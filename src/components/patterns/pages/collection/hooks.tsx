@@ -9,14 +9,20 @@ import {
   dateRangeFilter,
   DateRangeFilter,
   Filter,
+  idNameArrayFilter,
   MoreActions,
   MultiBulkActionToolbar,
+  MultiSelectCheckboxFilter,
+  OffsetQuery,
   PrimaryActions,
   RangeItem,
+  stringsArrayFilter,
   Table,
   TableColumn,
   TableState,
+  TabsFilter,
   useOptimisticActions,
+  useStaticListFilterCollection,
   useTableCollection,
 } from "@wix/patterns";
 import { CollectionPage } from "@wix/patterns/page";
@@ -32,16 +38,41 @@ import { type DataItem } from "../../../../backend/database";
 import { Text } from "@wix/design-system";
 
 export type TableFilters = {
-  updatedDate: Filter<RangeItem<Date>>;
+  colors: Filter<string[]>;
+  collections: Filter<string[]>;
+  available: Filter<{ id: string; name: string }[]>;
 };
 
 export const useJewelsPageState = () => {
-  const fetchDataHandler = async (
-    _query: CursorQuery<Partial<TableFilters>>
-  ) => {
+  const fetchDataHandler = async ({
+    search,
+    filters,
+    sort,
+  }: OffsetQuery<Partial<TableFilters>>) => {
     //TODO: handle query and filters
+    console.log(search, filters, sort);
+
+    let queryParams = {};
+    if (search) {
+      queryParams = { ...queryParams, q: search };
+    }
+    if (filters.colors) {
+      queryParams = { ...queryParams, colors: filters.colors.join(",") };
+    }
+    if (filters.collections) {
+      queryParams = { ...queryParams, colors: filters.collections.join(",") };
+    }
+    if (filters.available) {
+      queryParams = {
+        ...queryParams,
+        available: filters.available.map(({ id }) => id),
+      };
+    }
+
     const res = await httpClient.fetchWithAuth(
-      `${import.meta.env.BASE_API_URL}/jewels`
+      `${import.meta.env.BASE_API_URL}/jewels?${new URLSearchParams(
+        queryParams
+      ).toString()}`
     );
     const data: DataItem[] = await res.json();
     return {
@@ -58,7 +89,9 @@ export const useJewelsPageState = () => {
     fetchData: fetchDataHandler,
     fetchErrorMessage: ({ err }) => `Error: ${err}`,
     filters: {
-      updatedDate: dateRangeFilter(),
+      colors: stringsArrayFilter(),
+      collections: stringsArrayFilter(),
+      available: idNameArrayFilter(),
     },
   });
 
@@ -120,6 +153,23 @@ export const useJewelsPageContent = ({
   optimisticActions: CollectionOptimisticActions<Jewel, TableFilters>;
 }) => {
   const navigate = useNavigate();
+
+  const colorsCollection = useStaticListFilterCollection(
+    state.collection.filters.colors,
+    ["Red", "Green", "Blue", "Yellow", "Purple"]
+  );
+
+  const collectionsCollection = useStaticListFilterCollection(
+    state.collection.filters.collections,
+    [
+      "Collection 1",
+      "Collection 2",
+      "Collection 3",
+      "Collection 4",
+      "Collection 5",
+    ]
+  );
+
   return (
     <CollectionPage.Content>
       <Table
@@ -129,11 +179,31 @@ export const useJewelsPageContent = ({
         showSelection
         state={state}
         customColumns={<CustomColumns />}
+        tabs={
+          <TabsFilter
+            filter={state.collection.filters.available}
+            data={[
+              { id: "available", name: "Available" },
+              { id: "notAvailable", name: "notAvailable" },
+            ]}
+            all="All Items"
+          />
+        }
         filters={
-          <CollectionToolbarFilters>
-            <DateRangeFilter
-              accordionItemProps={{ label: "Date" }}
-              filter={state.collection.filters.updatedDate}
+          <CollectionToolbarFilters inline={0}>
+            <MultiSelectCheckboxFilter
+              accordionItemProps={{ label: "Colors" }}
+              popoverProps={{ appendTo: "window" }}
+              filter={state.collection.filters.colors}
+              collection={colorsCollection}
+              renderItem={(color) => ({ title: color })}
+            />
+            <MultiSelectCheckboxFilter
+              accordionItemProps={{ label: "Collections" }}
+              popoverProps={{ appendTo: "window" }}
+              filter={state.collection.filters.collections}
+              collection={collectionsCollection}
+              renderItem={(collection) => ({ title: collection })}
             />
           </CollectionToolbarFilters>
         }

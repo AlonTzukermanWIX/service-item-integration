@@ -9,11 +9,14 @@ import { Jewel } from "../../../types";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
+
   if (url.searchParams.get("id")) {
     console.log("has id");
   }
+
   const jewelsCollection = await getDataFromCollection({
     dataCollectionId: JEWELRY_COLLECTION_ID,
+    query: url.searchParams,
   });
 
   return new Response(JSON.stringify(jewelsCollection.items));
