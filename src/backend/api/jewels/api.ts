@@ -1,4 +1,6 @@
 import {
+  DataItem,
+  deleteDataFromCollection,
   getDataFromCollection,
   safelyGetItemFromCollection,
   upsertDataToCollection,
@@ -34,6 +36,21 @@ export async function POST(req: Request) {
         _id: jewel.id,
         data: jewel,
       },
+    });
+
+    return new Response('Success');
+  } catch (error) {
+    return new Response('Failed', { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  const { jewels } = (await req.json()) as { jewels: Jewel[] };
+
+  try {
+    await deleteDataFromCollection({
+      dataCollectionId: JEWELRY_COLLECTION_ID,
+      itemIds: jewels.map((jewel) => jewel.id),
     });
 
     return new Response('Success');

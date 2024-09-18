@@ -18,12 +18,13 @@ const router = createBrowserRouter(
   ],
   {
     basename:
-      '/wix/html/dashboard-asset/7a09bd5e-9992-4ad8-b3d2-e179774468ff.html', //TODO: Change it to the real path provided by the platform
+      '/wix/html/dashboard-asset/7a09bd5e-9992-4ad8-b3d2-e179774468ff.html',
   }
 );
 
 // Wrapping the router with withDashboard to provide the context for the SDK
 // Wrapping the router with WixPatternsProvider to provide the context for the patterns
+// Missing onCancel & onBack navigation handlers
 export default function JewelsAppRouter() {
   return (
     <WixPatternsProvider>

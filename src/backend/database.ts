@@ -1,4 +1,5 @@
 import { items } from '@wix/data';
+
 import { Jewel } from '../types';
 
 export type DataItem = {
@@ -67,4 +68,14 @@ export const upsertDataToCollection = async ({
       },
     });
   }
+};
+
+export const deleteDataFromCollection = async ({
+  dataCollectionId,
+  itemIds,
+}: {
+  dataCollectionId: string;
+  itemIds: string[];
+}) => {
+  await items.bulkRemoveDataItems({ dataCollectionId, dataItemIds: itemIds });
 };

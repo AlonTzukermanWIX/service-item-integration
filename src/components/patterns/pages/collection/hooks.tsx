@@ -10,6 +10,7 @@ import {
   DateRangeFilter,
   Filter,
   MoreActions,
+  MultiBulkActionToolbar,
   PrimaryActions,
   RangeItem,
   Table,
@@ -18,10 +19,17 @@ import {
   useOptimisticActions,
   useTableCollection,
 } from '@wix/patterns';
-import { CollectionPage } from '@wix/patterns/page';
-import { Add, Edit, InvoiceSmall, Visible } from '@wix/wix-ui-icons-common';
 import { type Jewel } from '../../../../types';
 import { type DataItem } from '../../../../backend/database';
+import { CollectionPage } from '@wix/patterns/page';
+import {
+  Add,
+  Delete,
+  Edit,
+  InvoiceSmall,
+  Visible,
+} from '@wix/wix-ui-icons-common';
+import { Text } from '@wix/design-system';
 
 export type TableFilters = {
   updatedDate: Filter<RangeItem<Date>>;
@@ -111,12 +119,14 @@ export const useJewelsPageContent = ({
   state: TableState<Jewel, TableFilters>;
   optimisticActions: CollectionOptimisticActions<Jewel, TableFilters>;
 }) => {
+  const navigate = useNavigate();
   return (
     <CollectionPage.Content>
       <Table
+        dataHook='dummy-entity-collection'
         useNewInfiniteScrollLoader
         horizontalScroll={true}
-        dataHook='dummy-entity-collection'
+        showSelection
         state={state}
         customColumns={<CustomColumns />}
         filters={
@@ -127,15 +137,63 @@ export const useJewelsPageContent = ({
             />
           </CollectionToolbarFilters>
         }
-        actionCell={(_item) => {
+        bulkActionToolbar={({ selectedValues, openConfirmModal }) => (
+          <MultiBulkActionToolbar
+            secondaryActionItems={[
+              {
+                label: 'Delete',
+                prefixIcon: <Delete />,
+                onClick: async () => {
+                  openConfirmModal({
+                    primaryButtonOnClick: async () => {
+                      optimisticActions.deleteMany(selectedValues, {
+                        submit: async (itemsToDelete) => {
+                          await deleteJewels(itemsToDelete);
+                        },
+                        successToast: 'Jewels deleted successfully',
+                      });
+                    },
+                    content: (
+                      <Text>
+                        You're about to delete the{' '}
+                        <b>{`${selectedValues.length} items`}</b>.
+                      </Text>
+                    ),
+                    theme: 'destructive',
+                  });
+                },
+              },
+            ]}
+          />
+        )}
+        actionCell={(item, _index, api) => {
           return {
             primaryAction: {
               text: 'Edit',
               onClick: () => {
-                console.log('Edit');
+                navigate(`/${item.id}`);
               },
               icon: <Edit />,
             },
+            secondaryActions: [
+              {
+                dataHook: 'collection-delete-action',
+                text: 'Delete',
+                icon: <Delete />,
+                onClick: () => {
+                  api.openConfirmDeleteModal({
+                    primaryButtonOnClick: () => {
+                      optimisticActions.deleteOne(item, {
+                        submit: async ([itemToDelete]) => {
+                          await deleteJewels([itemToDelete]);
+                        },
+                        successToast: 'Jewel deleted successfully',
+                      });
+                    },
+                  });
+                },
+              },
+            ],
           };
         }}
         columns={getJewelsTableColumns()}
@@ -196,5 +254,13 @@ const addJewel = async (item: Jewel) =>
     method: 'POST',
     body: JSON.stringify({
       jewel: item,
+    }),
+  });
+
+const deleteJewels = async (jewels: Jewel[]) =>
+  await httpClient.fetchWithAuth(`${import.meta.env.BASE_API_URL}/jewels`, {
+    method: 'DELETE',
+    body: JSON.stringify({
+      jewels,
     }),
   });
