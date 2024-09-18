@@ -1,6 +1,6 @@
-import { items } from '@wix/data';
+import { items } from "@wix/data";
 
-import { Jewel } from '../types';
+import { Jewel } from "../types";
 
 // Exposing utility functions over Wix Data APIs for easier usage and replacement of database
 
@@ -72,4 +72,14 @@ export const upsertDataToCollection = async ({
       },
     });
   }
+};
+
+export const deleteDataFromCollection = async ({
+  dataCollectionId,
+  itemIds,
+}: {
+  dataCollectionId: string;
+  itemIds: string[];
+}) => {
+  await items.bulkRemoveDataItems({ dataCollectionId, dataItemIds: itemIds });
 };

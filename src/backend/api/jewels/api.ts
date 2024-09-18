@@ -1,15 +1,16 @@
 import {
   DataItem,
+  deleteDataFromCollection,
   getDataFromCollection,
   upsertDataToCollection,
-} from '../../database';
-import { JEWELRY_COLLECTION_ID } from '../../consts';
-import { Jewel } from '../../../types';
+} from "../../database";
+import { JEWELRY_COLLECTION_ID } from "../../consts";
+import { Jewel } from "../../../types";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  if (url.searchParams.get('id')) {
-    console.log('has id');
+  if (url.searchParams.get("id")) {
+    console.log("has id");
   }
   const jewelsCollection = await getDataFromCollection({
     dataCollectionId: JEWELRY_COLLECTION_ID,
@@ -30,8 +31,23 @@ export async function POST(req: Request) {
       },
     });
 
-    return new Response('Success');
+    return new Response("Success");
   } catch (error) {
-    return new Response('Failed', { status: 500 });
+    return new Response("Failed", { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  const { jewels } = (await req.json()) as { jewels: Jewel[] };
+
+  try {
+    await deleteDataFromCollection({
+      dataCollectionId: JEWELRY_COLLECTION_ID,
+      itemIds: jewels.map((jewel) => jewel.id),
+    });
+
+    return new Response("Success");
+  } catch (error) {
+    return new Response("Failed", { status: 500 });
   }
 }
