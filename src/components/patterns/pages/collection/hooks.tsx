@@ -1,6 +1,6 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { httpClient } from "@wix/essentials";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { httpClient } from '@wix/essentials';
 import {
   CollectionOptimisticActions,
   CollectionToolbarFilters,
@@ -19,18 +19,18 @@ import {
   useOptimisticActions,
   useStaticListFilterCollection,
   useTableCollection,
-} from "@wix/patterns";
-import { type NewJewel } from "../../../../types";
-import { type DataItem } from "../../../../backend/database";
-import { CollectionPage } from "@wix/patterns/page";
+} from '@wix/patterns';
+import { type NewJewel } from '../../../../types';
+import { type DataItem } from '../../../../backend/database';
+import { CollectionPage } from '@wix/patterns/page';
 import {
   Add,
   Delete,
   Edit,
   InvoiceSmall,
   Visible,
-} from "@wix/wix-ui-icons-common";
-import { Box, Checkbox, Image, Text, ToggleSwitch } from "@wix/design-system";
+} from '@wix/wix-ui-icons-common';
+import { Box, Checkbox, Image, Text, ToggleSwitch } from '@wix/design-system';
 
 export type TableFilters = {
   colors: Filter<string[]>;
@@ -51,10 +51,10 @@ export const useJewelsPageState = () => {
       queryParams = { ...queryParams, q: search };
     }
     if (filters.colors) {
-      queryParams = { ...queryParams, colors: filters.colors.join(",") };
+      queryParams = { ...queryParams, colors: filters.colors.join(',') };
     }
     if (filters.collections) {
-      queryParams = { ...queryParams, colors: filters.collections.join(",") };
+      queryParams = { ...queryParams, colors: filters.collections.join(',') };
     }
     if (filters.available) {
       queryParams = {
@@ -77,8 +77,8 @@ export const useJewelsPageState = () => {
   };
 
   const state = useTableCollection<NewJewel, TableFilters>({
-    queryName: "dummy-entity-table",
-    fqdn: "wix.patterns.dummyservice.v1.dummy_entity",
+    queryName: 'dummy-entity-table',
+    fqdn: 'wix.patterns.dummyservice.v1.dummy_entity',
     itemKey: (item) => item.id,
     itemName: (item) => item.name,
     fetchData: fetchDataHandler,
@@ -109,16 +109,16 @@ export const useJewelsPageHeader = ({
 
   const createItem = async () => {
     const item = {
-      name: "New Jewel",
-      sku: "SKU",
-      mainImage: "https://via.placeholder.com/150",
+      name: 'New Jewel',
+      sku: 'SKU',
+      mainImage: 'https://via.placeholder.com/150',
       price: 0,
-      details: "Details",
-      color: "Red",
-      certification: "Certification",
-      category: "Category",
+      details: 'Details',
+      color: 'Red',
+      certification: 'Certification',
+      category: 'Category',
       availability: false,
-      id: "",
+      id: '',
     };
 
     optimisticActions.createOne(item, {
@@ -127,20 +127,20 @@ export const useJewelsPageHeader = ({
         const { data }: { data: NewJewel } = await res.json();
         return [data];
       },
-      successToast: "Jewel created successfully",
+      successToast: 'Jewel created successfully',
     });
   };
 
   return (
     <CollectionPage.Header
-      title={{ text: "Dummy Collection", hideTotal: true }}
+      title={{ text: 'Dummy Collection', hideTotal: true }}
       subtitle={{
-        text: "This is a dummy collection subtitle",
-        learnMore: { url: "https://www.wix.com" },
+        text: 'This is a dummy collection subtitle',
+        learnMore: { url: 'https://www.wix.com' },
       }}
       moreActions={<MoreActions items={moreActionsItems} />}
       primaryAction={
-        <PrimaryActions label="Add" prefixIcon={<Add />} onClick={createItem} />
+        <PrimaryActions label='Add' prefixIcon={<Add />} onClick={createItem} />
       }
     />
   );
@@ -157,57 +157,57 @@ export const useJewelsPageContent = ({
 
   const colorsCollection = useStaticListFilterCollection(
     state.collection.filters.colors,
-    ["Red", "Green", "Blue", "Yellow", "Purple"]
+    ['Red', 'Green', 'Blue', 'Yellow', 'Purple']
   );
 
   const collectionsCollection = useStaticListFilterCollection(
     state.collection.filters.collections,
     [
-      "Collection 1",
-      "Collection 2",
-      "Collection 3",
-      "Collection 4",
-      "Collection 5",
+      'Collection 1',
+      'Collection 2',
+      'Collection 3',
+      'Collection 4',
+      'Collection 5',
     ]
   );
 
   const availableCollection = useStaticListFilterCollection(
     state.collection.filters.available,
     [
-      { id: "available", name: "Available" },
-      { id: "not-available", name: "Not Available" },
+      { id: 'available', name: 'Available' },
+      { id: 'not-available', name: 'Not Available' },
     ]
   );
 
   return (
     <CollectionPage.Content>
       <Table
-        dataHook="dummy-entity-collection"
+        dataHook='dummy-entity-collection'
         useNewInfiniteScrollLoader
         horizontalScroll={true}
         showSelection
         state={state}
         customColumns={<CustomColumns />}
-        rowVerticalPadding="small"
+        rowVerticalPadding='small'
         filters={
           <CollectionToolbarFilters inline={1}>
             <MultiSelectCheckboxFilter
-              accordionItemProps={{ label: "In Stock" }}
-              popoverProps={{ appendTo: "window" }}
+              accordionItemProps={{ label: 'In Stock' }}
+              popoverProps={{ appendTo: 'window' }}
               filter={state.collection.filters.available}
               collection={availableCollection}
               renderItem={(available) => ({ title: available.name })}
             />
             <MultiSelectCheckboxFilter
-              accordionItemProps={{ label: "Colors" }}
-              popoverProps={{ appendTo: "window" }}
+              accordionItemProps={{ label: 'Colors' }}
+              popoverProps={{ appendTo: 'window' }}
               filter={state.collection.filters.colors}
               collection={colorsCollection}
               renderItem={(color) => ({ title: color })}
             />
             <MultiSelectCheckboxFilter
-              accordionItemProps={{ label: "Collections" }}
-              popoverProps={{ appendTo: "window" }}
+              accordionItemProps={{ label: 'Collections' }}
+              popoverProps={{ appendTo: 'window' }}
               filter={state.collection.filters.collections}
               collection={collectionsCollection}
               renderItem={(collection) => ({ title: collection })}
@@ -218,7 +218,7 @@ export const useJewelsPageContent = ({
           <MultiBulkActionToolbar
             secondaryActionItems={[
               {
-                label: "Delete",
+                label: 'Delete',
                 prefixIcon: <Delete />,
                 onClick: async () => {
                   openConfirmModal({
@@ -227,16 +227,16 @@ export const useJewelsPageContent = ({
                         submit: async (itemsToDelete) => {
                           await deleteJewels(itemsToDelete);
                         },
-                        successToast: "Jewels deleted successfully",
+                        successToast: 'Jewels deleted successfully',
                       });
                     },
                     content: (
                       <Text>
-                        You're about to delete the{" "}
+                        You're about to delete the{' '}
                         <b>{`${selectedValues.length} items`}</b>.
                       </Text>
                     ),
-                    theme: "destructive",
+                    theme: 'destructive',
                   });
                 },
               },
@@ -246,16 +246,16 @@ export const useJewelsPageContent = ({
         actionCell={(item, _index, api) => {
           return {
             primaryAction: {
-              text: "Edit",
+              text: 'Edit',
               onClick: () => {
-                navigate(`/${item.id}`);
+                navigate(`/${item.id ?? item._id}`);
               },
               icon: <Edit />,
             },
             secondaryActions: [
               {
-                dataHook: "collection-delete-action",
-                text: "Delete",
+                dataHook: 'collection-delete-action',
+                text: 'Delete',
                 icon: <Delete />,
                 onClick: () => {
                   api.openConfirmDeleteModal({
@@ -264,7 +264,7 @@ export const useJewelsPageContent = ({
                         submit: async ([itemToDelete]) => {
                           await deleteJewels([itemToDelete]);
                         },
-                        successToast: "Jewel deleted successfully",
+                        successToast: 'Jewel deleted successfully',
                       });
                     },
                   });
@@ -284,19 +284,19 @@ const useMoreActionsItems = () => {
   return [
     [
       {
-        biName: "action-1",
-        text: "Do Action #1",
+        biName: 'action-1',
+        text: 'Do Action #1',
         prefixIcon: <InvoiceSmall />,
         onClick: () => {
-          navigate("/8aq86w");
+          navigate('/8aq86w');
         },
       },
       {
-        biName: "action-2",
-        text: "Another Action #2",
+        biName: 'action-2',
+        text: 'Another Action #2',
         prefixIcon: <Visible />,
         onClick: () => {
-          console.log("Open Subscriptions");
+          console.log('Open Subscriptions');
         },
       },
     ],
@@ -306,57 +306,57 @@ const useMoreActionsItems = () => {
 const getJewelsTableColumns = () => {
   return [
     {
-      id: "product",
+      id: 'product',
       hideable: false,
-      title: "Product",
-      width: "60px",
+      title: 'Product',
+      width: '60px',
       render: (item: NewJewel) => {
-        return <Image height="42px" width="60px" src={item.mainImage} />;
+        return <Image height='42px' width='60px' src={item.mainImage} />;
       },
     },
     {
-      id: "name",
+      id: 'name',
       hideable: false,
-      width: "200px",
+      width: '200px',
       render: (item: NewJewel) => (
-        <Box direction="vertical" gap="3px">
-          <Text weight="normal">{item.name}</Text>
-          <Text size="small" secondary>
+        <Box direction='vertical' gap='3px'>
+          <Text weight='normal'>{item.name}</Text>
+          <Text size='small' secondary>
             {`SKU: ${item.sku}`}
           </Text>
         </Box>
       ),
     },
     {
-      id: "category",
-      title: "Category",
-      width: "100px",
+      id: 'category',
+      title: 'Category',
+      width: '100px',
       render: (item: NewJewel) => item.category,
     },
     {
-      id: "price",
-      title: "Price",
-      width: "100px",
+      id: 'price',
+      title: 'Price',
+      width: '100px',
       render: (item: NewJewel) => `$${item.price}`,
     },
     {
-      id: "details",
-      title: "Details",
-      width: "200px",
+      id: 'details',
+      title: 'Details',
+      width: '200px',
       render: (item: NewJewel) => item.details,
     },
     {
-      id: "certification",
-      title: "Certification",
-      width: "100px",
+      id: 'certification',
+      title: 'Certification',
+      width: '100px',
       render: (item: NewJewel) => item.certification,
     },
     {
-      id: "availability",
-      title: "Availability",
-      width: "100px",
+      id: 'availability',
+      title: 'Availability',
+      width: '100px',
       render: (item: NewJewel) => (
-        <Box verticalAlign="middle" gap="SP2">
+        <Box verticalAlign='middle' gap='SP2'>
           <Checkbox checked={item.availability} />
         </Box>
       ),
@@ -366,7 +366,7 @@ const getJewelsTableColumns = () => {
 
 const addJewel = async (item: NewJewel) =>
   await httpClient.fetchWithAuth(`${import.meta.env.BASE_API_URL}/jewels`, {
-    method: "POST",
+    method: 'POST',
     body: JSON.stringify({
       jewel: item,
     }),
@@ -374,7 +374,7 @@ const addJewel = async (item: NewJewel) =>
 
 const deleteJewels = async (jewels: NewJewel[]) =>
   await httpClient.fetchWithAuth(`${import.meta.env.BASE_API_URL}/jewels`, {
-    method: "DELETE",
+    method: 'DELETE',
     body: JSON.stringify({
       jewels,
     }),
