@@ -46,6 +46,7 @@ export const useJewelEntityPage = () => {
     saveErrorToast: (e) => 'Failed to save',
     fetch: async () => {
       // TODO: Load the entity you want to show in the page
+      console.log({ params });
       const res = await httpClient.fetchWithAuth(
         `${import.meta.env.BASE_API_URL}/jewels?id=${params.entityId}`
       );

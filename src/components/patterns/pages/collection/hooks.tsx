@@ -248,7 +248,7 @@ export const useJewelsPageContent = ({
             primaryAction: {
               text: 'Edit',
               onClick: () => {
-                navigate(`/${item.id ?? item._id}`);
+                navigate(`/${item._id}`);
               },
               icon: <Edit />,
             },
