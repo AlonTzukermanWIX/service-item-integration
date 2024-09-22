@@ -108,8 +108,9 @@ export const useJewelsPageHeader = ({
   const moreActionsItems = useMoreActionsItems();
 
   const createItem = async () => {
+    const id = Math.floor(Math.random() * 999999).toString();
     const item = {
-      name: 'New Jewel',
+      name: 'New preety Jewel',
       sku: 'SKU',
       mainImage: 'https://via.placeholder.com/150',
       price: 0,
@@ -118,14 +119,18 @@ export const useJewelsPageHeader = ({
       certification: 'Certification',
       category: 'Category',
       availability: false,
-      id: '',
+      _id: id,
+      id,
     };
 
     optimisticActions.createOne(item, {
       submit: async ([itemToSubmit]) => {
         const res = await addJewel(itemToSubmit);
-        const { data }: { data: NewJewel } = await res.json();
-        return [data];
+        const data = await res.json();
+        return [data.item];
+      },
+      onError: (error) => {
+        console.error('Failed to create jewel', error);
       },
       successToast: 'Jewel created successfully',
     });
@@ -248,7 +253,7 @@ export const useJewelsPageContent = ({
             primaryAction: {
               text: 'Edit',
               onClick: () => {
-                navigate(`/${item._id}`);
+                navigate(`/${item.id}`);
               },
               icon: <Edit />,
             },

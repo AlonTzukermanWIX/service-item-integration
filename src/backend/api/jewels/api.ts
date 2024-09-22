@@ -39,7 +39,7 @@ export async function POST(req: Request) {
       },
     });
 
-    return new Response('Success');
+    return new Response(JSON.stringify({ item: jewel }), { status: 201 });
   } catch (error) {
     return new Response('Failed', { status: 500 });
   }
