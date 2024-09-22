@@ -18,7 +18,7 @@ export const getDataFromCollection = async ({
   });
 
   if (query?.get('q')) {
-    queryItems.startsWith('name', query.get('q') as string);
+    queryItems = queryItems.startsWith('name', query.get('q') as string);
   }
 
   if (query?.get('colors')) {

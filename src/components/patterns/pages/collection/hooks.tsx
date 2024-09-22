@@ -138,7 +138,7 @@ export const useJewelsPageHeader = ({
 
   return (
     <CollectionPage.Header
-      title={{ text: 'Dummy Collection', hideTotal: true }}
+      title={{ text: 'Jewelery collection', hideTotal: true }}
       subtitle={{
         text: 'This is a dummy collection subtitle',
         learnMore: { url: 'https://www.wix.com' },
@@ -228,6 +228,7 @@ export const useJewelsPageContent = ({
                 onClick: async () => {
                   openConfirmModal({
                     primaryButtonOnClick: async () => {
+                      debugger;
                       optimisticActions.deleteMany(selectedValues, {
                         submit: async (itemsToDelete) => {
                           await deleteJewels(itemsToDelete);
@@ -313,7 +314,7 @@ const getJewelsTableColumns = () => {
     {
       id: 'product',
       hideable: false,
-      title: 'Product',
+      title: 'Image',
       width: '60px',
       render: (item: NewJewel) => {
         return <Image height='42px' width='60px' src={item.mainImage} />;

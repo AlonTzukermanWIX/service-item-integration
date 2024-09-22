@@ -51,7 +51,7 @@ export async function DELETE(req: Request) {
   try {
     await deleteDataFromCollection({
       dataCollectionId: NEW_COLLECTION_ID,
-      itemIds: jewels.map((jewel) => jewel.id),
+      itemIds: jewels.map((jewel) => jewel._id),
     });
 
     return new Response('Success');
